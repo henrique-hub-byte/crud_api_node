@@ -1,15 +1,11 @@
-// Importa o módulo express para criar um roteador
 const express = require('express');
-
-// Importa o controller PostController
 const postsController = require('../controllers/PostController');
-
+const checkAuthMiddleware = require('../middleware/check-auth');
 // Cria um roteador do Express
 const router = express.Router();
 
-// Define a rota '/' para chamar a função index do PostController
-//router.get('/', postsController.save);
-router.post('/', postsController.save);
+router.post('/', checkAuthMiddleware.checkAuth, postsController.save)
+//router.post('/', postsController.save);
 router.get('/:id', postsController.show);
 router.get('/', postsController.index)
 router.patch('/:id', postsController.update)

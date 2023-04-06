@@ -2,21 +2,21 @@
 const express = require('express');
 // Importa o módulo bodyParser
 const bodyParser = require('body-parser');
-
-// Cria uma instância do Express
-const app = express();
-
 // Importa o módulo de rotas para a rota '/posts'
 const postsRoute = require('./routes/posts');
 const usersRoute = require('./routes/users');
+const imageRoute = require('./routes/images')
+//const commmetsRoute = require('./routes/images')
 
-
+const app = express();
 
 app.use(bodyParser.json());
 // Usa o módulo de rotas para a rota '/posts'
 app.use('/posts', postsRoute);
 // Define uma rota '/blog' que envia uma resposta
 app.use('/users', usersRoute);
+//app.use('/comments', commmetsRoute);
+app.use('/images', imageRoute);
 
 app.get('/blog', (req, res) => {
     res.send('agua mole pedra dura tanto bate até que e nóis');  
