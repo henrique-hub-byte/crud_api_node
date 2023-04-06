@@ -6,15 +6,15 @@ const storage = multer.diskStorage({
         cb(null, './uploads');
     },
     filename: function(req, file, cb){
-        cb(null, new Data().getTime() + path.extname(file.originalname));
+        cb(null, new Date().getTime() + path.extname(file.originalname));
     }
-})
+});
 
 const fileFilter = (req, file, cb) => {
-    if(file.mimetype === 'image/jpeg' || file.mimetype == 'image/png'){
+    if(file.mimetype === 'image/jpeg' || file.mimetype === 'image/png'){
         cb(null, true);
-    } else {
-        cb(new Error('Unsupported files'), false)
+    }else{
+        cb(new Error('Unsupported files'), false);
     }
 }
 
@@ -23,8 +23,9 @@ const upload = multer({
     limits: {
         fileSize:1024*1024*10
     },
-    fileFilter: fileFilter
-})
+    fileFilter:fileFilter
+});
+
 console.log(storage.filename);
 console.log('****************');
 

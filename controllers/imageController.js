@@ -1,13 +1,13 @@
 function upload(req, res){
     if(req.file.filename){
         res.status(201).json({
-            message: 'Image uploaded successfully',
+            mesaage: "Image upload successfully",
             url: req.file.filename
         });
-    } else {
+    }else{
         res.status(500).json({
-            message: 'Something went wrong!'
-        })
+            mesaage: "Something went wrong!"
+        });
     }
 }
 
