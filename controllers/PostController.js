@@ -7,35 +7,43 @@ function save(req, res) {
         content: req.body.content,
         imageUrl: req.body.image_url,
         categoryId: req.body.category_id,
-        userId: 1
+        userId: req.userData
     }
-    
+
     const schema = {
-        title: {type:"string",optional:false, max: "100"}, 
-        content: {type:"string",optional:false, max: "100"}, 
-        categoryId: {type:"number",optional:false}, 
+        title: { type: "string", optional: false, max: "100" },
+        content: { type: "string", optional: false, max: "100" },
+        categoryId: { type: "number", optional: false },
     }
 
     const v = new Validator();
-    const validationResponse = v.validate(posts,schema);
+    const validationResponse = v.validate(posts, schema);
 
-    if(validationResponse !== true){
+    if (validationResponse !== true) {
         return res.status(400).json({
             message: 'Validation failed',
             errors: validationResponse
         });
     }
 
-    models.Post.create(posts).then(result => {
-        res.status(201).json({
-            message: 'Post created successfully',
-            post: result
-        })
-    }).catch(error => {
-        res.status(500).json({
-            messagem: 'Something went wrong',
-            error: error
-        })
+    models.Category.findByPk(req.body.category_id).then(result => {
+        if (result !== null) {
+            models.Post.create(posts).then(result => {
+                res.status(201).json({
+                    message: 'Post created successfully',
+                    post: result
+                })
+            }).catch(error => {
+                res.status(500).json({
+                    messagem: 'Something went wrong',
+                    error: error
+                })
+            });
+        } else {
+            res.status(400).json({
+                messagem: 'Invalid category'
+            })
+        }
     });
 }
 
@@ -43,9 +51,9 @@ function show(req, res) {
     const id = req.params.id;
 
     models.Post.findByPk(id).then(result => {
-        if(result){
+        if (result) {
             res.status(200).json(result);
-        }else {
+        } else {
             res.status(404).json({
                 message: 'Post not found'
             })
@@ -76,40 +84,47 @@ function update(req, res) {
     const userId = 1;
 
     const schema = {
-        title: {type:"string",optional:false, max: "100"}, 
-        content: {type:"string",optional:false, max: "100"}, 
-        categoryId: {type:"number",optional:false}, 
+        title: { type: "string", optional: false, max: "100" },
+        content: { type: "string", optional: false, max: "100" },
+        categoryId: { type: "number", optional: false },
     }
 
     const v = new Validator();
-    const validationResponse = v.validate(updatedPost,schema);
+    const validationResponse = v.validate(updatedPost, schema);
 
-    if(validationResponse !== true){
+    if (validationResponse !== true) {
         return res.status(400).json({
             message: 'Validation failed',
             errors: validationResponse
         });
     }
 
-
-    models.Post.update(updatedPost, { where: { id: id, userId: userId } }).then(result => {
-        res.status(200).json({
-            message: 'Post updates succesfully',
-            post: updatedPost
-        });
-    }).catch(error => {
-        res.status(502).json({
-            messagem: 'Something went wrong',
-            error: error
-        });
-    })
+    models.Category.findByPk(req.body.category_id).then(result => {
+        if (result !== null) {
+            models.Post.update(updatedPost, { where: { id: id, userId: userId } }).then(result => {
+                res.status(200).json({
+                    message: 'Post updates succesfully',
+                    post: updatedPost
+                });
+            }).catch(error => {
+                res.status(502).json({
+                    messagem: 'Something went wrong',
+                    error: error
+                });
+            })
+        } else {
+            res.status(400).json({
+                messagem: 'Invalid category'
+            })
+        }
+    });
 }
 
 function destroy(req, res) {
     const id = req.params.id;
     const userId = 1;
 
-    models.Post.destroy({where:{id:id, userId:userId } }).then(result => {
+    models.Post.destroy({ where: { id: id, userId: userId } }).then(result => {
         res.status(200).json({
             message: 'Post deleted succesfully'
         })

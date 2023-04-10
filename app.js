@@ -6,11 +6,12 @@ const bodyParser = require('body-parser');
 const postsRoute = require('./routes/posts');
 const usersRoute = require('./routes/users');
 const imageRoute = require('./routes/images')
-//const commmetsRoute = require('./routes/images')
+//const commmetsRoute = require('./routes/comments')
 
 const app = express();
 
 app.use(bodyParser.json());
+app.use('/uploads', express.static('uploads'))
 // Usa o módulo de rotas para a rota '/posts'
 app.use('/posts', postsRoute);
 // Define uma rota '/blog' que envia uma resposta
